@@ -16,9 +16,9 @@ app.get("/", (request, response) => {
     message:
       "Welcome to easy note taking application. Takes note quickly. Organize and keep track af all your notes.",
   });
+});
 
-  //__Setup Request Listener__//
-  app.listen(5000, () => {
-    console.log("Server is Running on port: 5000");
-  });
+//__Setup Request Listener__//
+app.listen(5000, () => {
+  console.log("Server is Running on port: 5000");
 });
