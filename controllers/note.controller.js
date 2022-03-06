@@ -43,7 +43,26 @@ exports.findAll = (request, response) => {
 
 //__Find a Single Note with a noteId__//
 exports.findOne = (request, response) => {
-  console.log("Method for Show an Single Note Based on ID");
+  noteModel
+    .findById(request.param.noteId)
+    .then((note) => {
+      if (!note) {
+        return response.status(404).send({
+          message: "Note not found with this ID " + request.param.noteId,
+        });
+      }
+      response.send(note);
+    })
+    .catch((error) => {
+      if (error.kind === "ObjectId") {
+        return response.status(404).send({
+          message: "Note not found with this ID " + request.param.noteId,
+        });
+      }
+      return response.status(500).send({
+        message: "Error retrieving note with id " + request.param.noteId,
+      });
+    });
 };
 
 //__Update a Single Note Which Identified with a noteId__//
