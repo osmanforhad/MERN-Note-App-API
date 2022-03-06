@@ -1,3 +1,4 @@
+const noteModel = require("../models/note.model");
 const NoteModel = require("../models/note.model");
 
 //__Method for Create and Save a New Note__//
@@ -28,7 +29,16 @@ exports.create = (request, response) => {
 
 //__Retrieve and return all notes from the Database__//
 exports.findAll = (request, response) => {
-  console.log("Method for Show Note List");
+  noteModel
+    .find()
+    .then((notes) => {
+      response.send(notes);
+    })
+    .catch((error) => {
+      response.status(500).send({
+        message: error.message || "Some error occurred while retrieving notes",
+      });
+    });
 };
 
 //__Find a Single Note with a noteId__//
