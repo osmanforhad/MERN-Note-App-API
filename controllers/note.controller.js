@@ -105,5 +105,24 @@ exports.update = (request, response) => {
 
 //__Delete a Single Note Which Identified with a noteId__//
 exports.delete = (request, response) => {
-  console.log("Method for Delete an Single Note Based on ID");
+  noteModel
+    .findByIdAndRemove(request.params.noteId)
+    .then((note) => {
+      if (!note) {
+        return response.status(400).send({
+          message: "Note not found with this id " + request.params.noteId,
+        });
+      }
+      response.send({ message: "Note deleted successfully" });
+    })
+    .catch((error) => {
+      if (error.kind === "ObjectId" || error.name === "NotFound") {
+        return response.status(404).send({
+          message: "Note not found with this id " + request.params.noteId,
+        });
+      }
+      return response.status(500).send({
+        message: "Could not delete note with this id " + request.params.noteId,
+      });
+    });
 };
