@@ -1,4 +1,3 @@
-const noteModel = require("../models/note.model");
 const NoteModel = require("../models/note.model");
 
 //__Method for Create and Save a New Note__//
@@ -29,8 +28,7 @@ exports.create = (request, response) => {
 
 //__Retrieve and return all notes from the Database__//
 exports.findAll = (request, response) => {
-  noteModel
-    .find()
+  NoteModel.find()
     .then((notes) => {
       response.send(notes);
     })
@@ -43,8 +41,7 @@ exports.findAll = (request, response) => {
 
 //__Find a Single Note with a noteId__//
 exports.findOne = (request, response) => {
-  noteModel
-    .findById(request.params.noteId)
+  NoteModel.findById(request.params.noteId)
     .then((note) => {
       if (!note) {
         return response.status(404).send({
@@ -74,15 +71,14 @@ exports.update = (request, response) => {
     });
   }
   //find note based on requested ID and update with the request body(input)
-  noteModel
-    .findByIdAndUpdate(
-      request.params.noteId,
-      {
-        title: request.body.title || "Untitled Note",
-        content: request.body.content,
-      },
-      { new: true }
-    )
+  NoteModel.findByIdAndUpdate(
+    request.params.noteId,
+    {
+      title: request.body.title || "Untitled Note",
+      content: request.body.content,
+    },
+    { new: true }
+  )
     .then((note) => {
       if (!note) {
         return response.status(404).send({
@@ -105,8 +101,7 @@ exports.update = (request, response) => {
 
 //__Delete a Single Note Which Identified with a noteId__//
 exports.delete = (request, response) => {
-  noteModel
-    .findByIdAndRemove(request.params.noteId)
+  NoteModel.findByIdAndRemove(request.params.noteId)
     .then((note) => {
       if (!note) {
         return response.status(400).send({
