@@ -36,6 +36,8 @@ app.get("/", (request, response) => {
   });
 });
 
+require("./route/note.route")(app);
+
 //__Setup Request Listener__//
 app.listen(5000, () => {
   console.log("Server is Running on port: 5000");
