@@ -44,11 +44,11 @@ exports.findAll = (request, response) => {
 //__Find a Single Note with a noteId__//
 exports.findOne = (request, response) => {
   noteModel
-    .findById(request.param.noteId)
+    .findById(request.params.noteId)
     .then((note) => {
       if (!note) {
         return response.status(404).send({
-          message: "Note not found with this ID " + request.param.noteId,
+          message: "Note not found with this ID " + request.params.noteId,
         });
       }
       response.send(note);
@@ -56,18 +56,51 @@ exports.findOne = (request, response) => {
     .catch((error) => {
       if (error.kind === "ObjectId") {
         return response.status(404).send({
-          message: "Note not found with this ID " + request.param.noteId,
+          message: "Note not found with this ID " + request.params.noteId,
         });
       }
       return response.status(500).send({
-        message: "Error retrieving note with id " + request.param.noteId,
+        message: "Error retrieving note with id " + request.params.noteId,
       });
     });
 };
 
 //__Update a Single Note Which Identified with a noteId__//
 exports.update = (request, response) => {
-  console.log("Method for Update an Single Note Based on ID");
+  //Validate Request
+  if (!request.body.content) {
+    return response.status(400).send({
+      message: "Note content can not be empty",
+    });
+  }
+  //find note based on requested ID and update with the request body(input)
+  noteModel
+    .findByIdAndUpdate(
+      request.params.noteId,
+      {
+        title: request.body.title || "Untitled Note",
+        content: request.body.content,
+      },
+      { new: true }
+    )
+    .then((note) => {
+      if (!note) {
+        return response.status(404).send({
+          message: "Note not found with this id " + request.params.noteId,
+        });
+      }
+      response.send(note);
+    })
+    .catch((error) => {
+      if (error.kind === "ObjectId") {
+        return response.status(404).send({
+          message: "Note not found with this id " + request.params.noteId,
+        });
+      }
+      return response.status(500).send({
+        message: "Error Updating note with id " + request.params.noteId,
+      });
+    });
 };
 
 //__Delete a Single Note Which Identified with a noteId__//
